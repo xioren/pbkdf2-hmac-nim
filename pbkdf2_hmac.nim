@@ -34,7 +34,10 @@ proc pbkdf2Hmac*(password, salt: openarray[uint8],
   
   for i in 1 .. blockCount:
     # NOTE: append i the the end of salt in big endian format
-    bigEndian32(addr saltSeq[^4], unsafeAddr i)
+    saltSeq[^4] = uint8(i shr 24 and 0xFF)
+    saltSeq[^3] = uint8(i shr 16 and 0xFF)
+    saltSeq[^2] = uint8(i shr 8 and 0xFF)
+    saltSeq[^1] = uint8(i and 0xFF)
   
     hmacCtx = newHmacCtx(password, saltSeq, digestMod)
     U = hmacCtx.digest()
