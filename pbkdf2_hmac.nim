@@ -22,7 +22,8 @@ proc pbkdf2Hmac*(password, salt: openarray[uint8],
   let hLen = if digestMod == SHA256: 32 else: 64
   let derivedKeyLen = if dkLen > 0: dkLen else: hLen
 
-  var key = newSeq[uint8](derivedKeyLen)
+  result = newSeq[uint8](derivedKeyLen)
+  
   var blockCount = (derivedKeyLen + hLen.pred) div hLen
   var saltSeq = salt.toSeq() & @[uint8(0), uint8(0), uint8(0), uint8(0)]
   var T = newSeq[uint8](hLen)
@@ -54,9 +55,9 @@ proc pbkdf2Hmac*(password, salt: openarray[uint8],
     startIdx = i.pred * hLen
     endIdx = min(startIdx + hLen, derivedKeyLen)
     for k in startIdx ..< endIdx:
-      key[k] = T[k - startIdx]
+      result[k] = T[k - startIdx]
 
-  return key
+  return result
 
 
 proc pbkdf2Hmac*(password, salt: string,
