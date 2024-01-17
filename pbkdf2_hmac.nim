@@ -1,4 +1,4 @@
-import std/[endians, sequtils, strutils]
+import std/[sequtils, strutils]
 
 import hmac
 
